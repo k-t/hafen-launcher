@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Create Runnable Jar for Project PluginTest">
-    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
-    <!--ANT 1.7 is required                                        -->
-    <target name="create_run_jar">
-        <jar destfile="jar/hafen-launcher.jar" filesetmanifest="mergewithoutmain">
+<project name="haven-launcher" default="deftgt">
+
+    <target name="build-env">
+        <mkdir dir="build" />
+        <mkdir dir="build/classes" />
+    </target>
+
+    <target name="compile" depends="build-env">
+        <javac srcdir="src" destdir="build/classes" debug="on" includeantruntime="no" />
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="build/hafen-launcher.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="org.ender.updater.Main"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="bin"/>
-        	<fileset file="etc/config.xml"/>
+            <fileset dir="build/classes"/>
+            <fileset file="etc/config.xml"/>
         </jar>
+        <chmod file="build/hafen-launcher.jar" perm="a+x" />
     </target>
+
+    <target name="deftgt" depends="jar" />
 </project>
