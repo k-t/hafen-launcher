@@ -1,0 +1,13 @@
+language: java
+script: ant deftgt
+jdk:
+- oraclejdk8
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: hiHlM1QVGdi12p58qsWh/Gpl1t5t7e0765NrbfKT3Zb9/2UOUQ5mrmGej+33mu6dnbeR71Mvo69zxvEeFX003vhagpFrvGmI0xWLE0yqzF00mslsV6yXIz+0LcQfm/I5VF4KgOXO0f73dCwRr3awX2PMsdZpUniQSLCtP2YfSEiWHbtFywUToppxkC7vaB+jbor1I6xE9KSCkJdUEzb6c8UqOQ/CKP4tFWPuU6zfardrI4gS4Lqqm9y0Cq+mK2KKfk2mwO37ULTHctqzE/oiRauwuN0tc+nD4KV4CnhR3rSB2rw2h2Zvz6SO/mZPDtUjqtkg+2CLlbgDFTd5sTtDgetWgI0/iD/MgXnzJ56zPpN6D0jhwXY3+ts3SW7UQN4V1XyvbOyX+XqUg6ulxzzmTx6DuogAYkmB60ZgrK/AezgO26ncv1IskvU5SS69L3VgzTotK5HloSh8JCttLjURb4lG1eNmUHtyPicrUHOgRnPcJn8TsVShfxhlIOVD00hxoM9F7qrnkH1r2LRk4WX3pEfgMwUSNBkRkxIxgO+9JYMMtxTddZkh++Il90JhxQzKZ56CaOZhMUog2SeP3BFb33/9bdgp7Gdi00C0jneBt4eEfjUFWDAXCJUmr1oS2LvwVgy50B2Dt4yEllFz7g0gAjgU/s5CaaviDqXM4+AXUdQ=
+  file: build/hafen-launcher.jar
+  on:
+    tags: true
+    repo: k-t/hafen-launcher
