@@ -37,12 +37,12 @@ public class Main extends JFrame implements IUpdaterListener{
     private JProgressBar progress;
 
     public Main(){
-	super("HnH updater");
+	super("Hafen Launcher");
 	try {
 	    if(!dir.exists()){
 		dir.mkdirs();
 	    }
-	    log = new FileOutputStream(new File(dir, "updater.log"));
+	    log = new FileOutputStream(new File(dir, "launcher.log"));
 	} catch (FileNotFoundException e) {
 	    e.printStackTrace();
 	}
