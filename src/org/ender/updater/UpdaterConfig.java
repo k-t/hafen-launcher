@@ -2,6 +2,7 @@ package org.ender.updater;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,17 +16,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class UpdaterConfig {
-    private static final String EXTRACT = "extract";
     private static final String ITEM = "item";
-    private static final String ARCH = "arch";
-    private static final String OS = "os";
-    private static final String FILE = "file";
-    private static final String LINK = "link";
     
     public String mem, res, server, jar;
     public static File dir = new File(".");
 
-    List<Item> items = new ArrayList<UpdaterConfig.Item>();
+    private final ItemFactory itemFactory = new ItemFactory();
+    private final List<Item> items = new ArrayList<Item>();
 
     public UpdaterConfig(){
 	if(!dir.exists()){
@@ -65,34 +62,9 @@ public class UpdaterConfig {
 	}
     }
 
-    private Item parseItem(Node node) {
-	Item itm = new Item();
-	if (node.getNodeType() != Node.ELEMENT_NODE)
-	    return null;
-	Element el = (Element) node;
-
-	itm.link = el.getAttribute(LINK);
-	if(el.hasAttribute(FILE)){
-	    itm.file = new File(dir, el.getAttribute(FILE));
-	} else {
-	    int i = itm.link.lastIndexOf("/");
-	    itm.file = new File(dir, itm.link.substring(i+1));
-	}
-	itm.os = el.getAttribute(OS);
-	itm.arch = el.getAttribute(ARCH);
-	String e = el.getAttribute(EXTRACT);
-	if(e.length() > 0){itm.extract = new File(dir, e);}
-	return itm;
-    }
-
-    public static class Item{
-	public String arch;
-	public String os;
-	public File file;
-	public String link;
-	public long date = 0;
-	public long size = 0;
-	public File extract = null;
-
+    private Item parseItem(Node node) throws MalformedURLException {
+		if (node.getNodeType() != Node.ELEMENT_NODE)
+			return null;
+		return itemFactory.create((Element)node);
     }
 }
