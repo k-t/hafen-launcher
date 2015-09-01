@@ -1,2 +1,10 @@
 /bin
 /jar
+
+*.ipr
+*.iws
+*.iml
+.idea/
+
+
+
