@@ -1,6 +1,7 @@
 package org.ender.updater;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class UpdaterConfig {
     public static File dir = new File(".");
 
     private final ItemFactory itemFactory = new ItemFactory();
-    private final List<Item> items = new ArrayList<Item>();
+    public final List<Item> items = new ArrayList<Item>();
 
     public UpdaterConfig(){
 	if(!dir.exists()){
@@ -62,7 +63,7 @@ public class UpdaterConfig {
 	}
     }
 
-    private Item parseItem(Node node) throws MalformedURLException {
+    private Item parseItem(Node node) throws IOException {
 		if (node.getNodeType() != Node.ELEMENT_NODE)
 			return null;
 		return itemFactory.create((Element)node);

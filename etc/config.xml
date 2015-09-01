@@ -51,7 +51,8 @@
 	<item link="http://www.havenandhearth.com/java/jogl2/jar/jogl-all.jar"/>
 	<item link="http://www.havenandhearth.com/java/jogl2/jar/gluegen-rt.jar"/>
 	<item link="http://www.havenandhearth.com/java/hafen-res.jar" />
-	<item link="http://www.havenandhearth.com/java/hafen.jar" />
+	<item type="github-release" owner="k-t" repo="hafen-client" file="hafen.jar" />
+	<item type="github-release" owner="k-t" repo="hafen-client" file="custom-res.jar" />
 	<item link="http://www.havenandhearth.com/java/builtin-res.jar" />
 
 </config>

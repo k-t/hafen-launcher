@@ -18,14 +18,16 @@ public class Item {
     private final File file;
     private final URL url;
     private final File extract;
+    private final boolean useHeadRequest;
     private long size = 0;
 
-    public Item(String arch, String os, File file, File extract, String url) throws MalformedURLException {
+    public Item(String arch, String os, File file, File extract, String url, boolean useHeadRequest) throws MalformedURLException {
         this.arch = arch;
         this.os = os;
         this.file = file;
         this.extract = extract;
         this.url = new URL(url);
+        this.useHeadRequest = useHeadRequest;
     }
 
     public long getLastModified() {
@@ -49,10 +51,13 @@ public class Item {
     public boolean hasUpdate() {
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("HEAD");
-            conn.setIfModifiedSince(getLastModified());
+            if (useHeadRequest) {
+                conn.setRequestMethod("HEAD");
+                conn.setIfModifiedSince(getLastModified());
+            }
             try {
-                if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                int response = conn.getResponseCode();
+                if (response == HttpURLConnection.HTTP_OK && (useHeadRequest || conn.getLastModified() > getLastModified())) {
                     size = Long.parseLong(conn.getHeaderField("Content-Length"));
                     return true;
                 }
