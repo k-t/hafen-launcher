@@ -24,14 +24,14 @@ public class ItemFactory {
         boolean useHeadRequest = !getType(el).equals(TYPE_GITHUB_RELEASE);
 
         String e = el.getAttribute(EXTRACT);
-        File extract = e.length() > 0 ? new File(UpdaterConfig.dir, e) : null;
+        File extract = e.length() > 0 ? new File(Main.dir, e) : null;
 
         File file;
         if (el.hasAttribute(FILE)) {
-            file = new File(UpdaterConfig.dir, el.getAttribute(FILE));
+            file = new File(Main.dir, el.getAttribute(FILE));
         } else {
             int i = url.lastIndexOf("/");
-            file = new File(UpdaterConfig.dir, url.substring(i + 1));
+            file = new File(Main.dir, url.substring(i + 1));
         }
 
         return new Item(arch, os, file, extract, url, useHeadRequest);

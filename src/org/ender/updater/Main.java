@@ -10,14 +10,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
-import static org.ender.updater.UpdaterConfig.dir;
 
 
 public class Main extends JFrame implements IUpdaterListener{
     private static final int PROGRESS_MAX = 1024;
+    private static final String LOG_DIR = "logs";
     private static final long serialVersionUID = 1L;
     private static Updater updater;
-    private FileOutputStream log; 
+    private FileOutputStream log;
+    public static File dir = new File(".");
 
     public static void main(String[] args) {
 	try {
@@ -39,10 +40,10 @@ public class Main extends JFrame implements IUpdaterListener{
     public Main(){
 	super("Hafen Launcher");
 	try {
-	    if(!dir.exists()){
-		dir.mkdirs();
-	    }
-	    log = new FileOutputStream(new File(dir, "launcher.log"));
+        File logDir = new File(".", LOG_DIR);
+        if (!logDir.exists())
+            logDir.mkdirs();
+	    log = new FileOutputStream(new File(logDir, "launcher.log"));
 	} catch (FileNotFoundException e) {
 	    e.printStackTrace();
 	}
@@ -78,7 +79,7 @@ public class Main extends JFrame implements IUpdaterListener{
 	String libs = String.format("-Djava.library.path=\"%%PATH%%\"%s.", File.pathSeparator);
 	UpdaterConfig cfg = updater.cfg;
 	ProcessBuilder pb = new ProcessBuilder("java", "-Xmx"+cfg.mem, libs, "-jar", cfg.jar, "-U", cfg.res, cfg.server);
-	pb.directory(UpdaterConfig.dir.getAbsoluteFile());
+	pb.directory(dir.getAbsoluteFile());
 	try {
 	    pb.start();
 	} catch (IOException e) {

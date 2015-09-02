@@ -20,16 +20,11 @@ public class UpdaterConfig {
     private static final String ITEM = "item";
     
     public String mem, res, server, jar;
-    public static File dir = new File(".");
 
     private final ItemFactory itemFactory = new ItemFactory();
     public final List<Item> items = new ArrayList<Item>();
 
-    public UpdaterConfig(){
-	if(!dir.exists()){
-	    dir.mkdirs();
-	}
-	
+    public UpdaterConfig() {
 	InputStream stream = UpdaterConfig.class.getResourceAsStream("/config.xml");
 
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
