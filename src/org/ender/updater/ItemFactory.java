@@ -41,10 +41,11 @@ public class ItemFactory {
         String type = getType(el);
         if (type.equals(TYPE_GITHUB_RELEASE)) {
             String owner = el.getAttribute("owner");
-            String repo = el.getAttribute("repo");
+            String repoName = el.getAttribute("repo");
             String fileName = el.getAttribute("file");
-            String releaseName = GithubUtils.getLatestReleaseName(owner, repo);
-            return GithubUtils.getAssetDownloadUrl(owner, repo, releaseName, fileName).toString();
+            GitHubRepository repo = new GitHubRepository(owner, repoName);
+            String releaseName = repo.getLatestReleaseName();
+            return repo.getAssetDownloadUrl(releaseName, fileName).toString();
         }
         return el.getAttribute(LINK);
     }
