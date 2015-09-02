@@ -6,7 +6,7 @@
     </target>
 
     <target name="compile" depends="build-env">
-        <javac srcdir="src" destdir="build/classes" debug="on" includeantruntime="no" />
+        <javac srcdir="src" destdir="build/classes" debug="on" source="1.6" target="1.6" includeantruntime="no" />
     </target>
 
     <target name="jar" depends="compile">
