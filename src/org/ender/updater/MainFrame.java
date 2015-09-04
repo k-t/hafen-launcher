@@ -1,6 +1,8 @@
 package org.ender.updater;
 
 import org.ender.updater.tasks.*;
+import org.ender.updater.util.ExceptionUtils;
+import org.markdown4j.Markdown4jProcessor;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -13,7 +15,7 @@ public class MainFrame extends JFrame implements TaskListener {
     private static final String LOG_DIR = "logs";
     private static final long serialVersionUID = 1L;
 
-    private JTextArea logbox;
+    private JTextPane logbox;
     private JLabel progressLabel;
     private JProgressBar progress;
     private FileOutputStream log;
@@ -30,11 +32,10 @@ public class MainFrame extends JFrame implements TaskListener {
         add(p = new JPanel());
         p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
 
-        logbox = new JTextArea();
+        logbox = new JTextPane();
+        logbox.setContentType("text/html");
         logbox.setAlignmentX(LEFT_ALIGNMENT);
         logbox.setEditable(false);
-        logbox.setWrapStyleWord(true);
-        logbox.setLineWrap(true);
         logbox.setFont(logbox.getFont().deriveFont(10.0f));
 
         JScrollPane scroll;
@@ -120,7 +121,7 @@ public class MainFrame extends JFrame implements TaskListener {
         taskExecutor.queue(task, new TaskAdapter(MainFrame.this) {
             @Override
             public void finished() {
-                logbox.setText(task.getChangelog());
+                logbox.setText(toHtml(task.getChangelog()));
                 MainFrame.this.updateClient();
             }
         });
@@ -137,5 +138,15 @@ public class MainFrame extends JFrame implements TaskListener {
 
     private void runClient() {
         taskExecutor.queue(new RunClientTask(config), MainFrame.this);
+    }
+
+    private String toHtml(String markdown) {
+        try {
+            Markdown4jProcessor processor = new Markdown4jProcessor();
+            return processor.process(markdown);
+        } catch (Exception e) {
+            log(ExceptionUtils.getStackTrack(e));
+            return "";
+        }
     }
 }

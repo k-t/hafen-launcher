@@ -6,11 +6,16 @@
     </target>
 
     <target name="compile" depends="build-env">
-        <javac srcdir="src" destdir="build/classes" debug="on" source="1.6" target="1.6" includeantruntime="no" />
+        <javac srcdir="src" destdir="build/classes" debug="on" source="1.6" target="1.6" includeantruntime="no">
+            <classpath>
+                <pathelement path="lib/markdown4j-2.2.jar" />
+            </classpath>
+        </javac>
     </target>
 
     <target name="jar" depends="compile">
         <jar destfile="build/hafen-launcher.jar" filesetmanifest="mergewithoutmain">
+            <zipgroupfileset dir="lib" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="org.ender.updater.Main"/>
                 <attribute name="Class-Path" value="."/>
