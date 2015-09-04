@@ -1,5 +1,7 @@
 package org.ender.updater;
 
+import org.ender.updater.util.ExceptionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +22,14 @@ public class Updater {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                for (UpdaterTask task : tasks)
-                    task.run(listener);
-                listener.finished();
+                try {
+                    for (UpdaterTask task : tasks)
+                        task.run(listener);
+                } catch (Exception e) {
+                    listener.log(ExceptionUtils.getStackTrack(e));
+                } finally {
+                    listener.finished();
+                }
             }
         });
         t.setDaemon(true);
