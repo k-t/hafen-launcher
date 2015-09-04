@@ -18,6 +18,7 @@ public class MainFrame extends JFrame implements TaskListener {
     private JTextPane logbox;
     private JLabel progressLabel;
     private JProgressBar progress;
+
     private FileOutputStream log;
     private UpdaterConfig config;
     private TaskExecutor taskExecutor;
@@ -28,32 +29,27 @@ public class MainFrame extends JFrame implements TaskListener {
         openLog();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel p;
-        add(p = new JPanel());
-        p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
-
         logbox = new JTextPane();
         logbox.setContentType("text/html");
-        logbox.setAlignmentX(LEFT_ALIGNMENT);
         logbox.setEditable(false);
         logbox.setFont(logbox.getFont().deriveFont(10.0f));
 
-        JScrollPane scroll;
-        p.add(scroll = new JScrollPane(logbox,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-        scroll.setPreferredSize(getSize());
-        scroll.setAlignmentX(LEFT_ALIGNMENT);
+        Container bottom = new JPanel();
+        bottom.setLayout(new BorderLayout());
 
-        p.add(progressLabel = new JLabel());
-        progressLabel.setAlignmentX(LEFT_ALIGNMENT);
+        bottom.add(progressLabel = new JLabel(), BorderLayout.PAGE_START);
         progressLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
-        p.add(progress = new JProgressBar());
-        progress.setAlignmentX(LEFT_ALIGNMENT);
+        bottom.add(progress = new JProgressBar(), BorderLayout.CENTER);
         progress.setMinimum(0);
         progress.setMaximum(PROGRESS_MAX);
         progress.setPreferredSize(new Dimension(20, 20));
+
+        Container p = getContentPane();
+        p.setLayout(new BorderLayout());
+        p.add(new JScrollPane(logbox), BorderLayout.CENTER);
+        p.add(bottom, BorderLayout.PAGE_END);
+
         pack();
 
         addWindowListener(new WindowAdapter() {
