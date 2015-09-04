@@ -1,4 +1,4 @@
-package org.ender.updater;
+package org.ender.updater.tasks;
 
 public class TaskAdapter implements TaskListener  {
     private final TaskListener base;

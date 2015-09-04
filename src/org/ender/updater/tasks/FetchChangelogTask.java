@@ -1,7 +1,5 @@
 package org.ender.updater.tasks;
 
-import org.ender.updater.Task;
-import org.ender.updater.TaskListener;
 import org.ender.updater.UpdaterConfig;
 
 import java.io.*;

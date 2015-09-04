@@ -1,4 +1,4 @@
-package org.ender.updater;
+package org.ender.updater.tasks;
 
 import org.ender.updater.util.ExceptionUtils;
 

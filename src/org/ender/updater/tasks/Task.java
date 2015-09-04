@@ -1,4 +1,4 @@
-package org.ender.updater;
+package org.ender.updater.tasks;
 
 public interface Task {
     void run(TaskListener listener);

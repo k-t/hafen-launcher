@@ -1,5 +1,7 @@
 package org.ender.updater;
 
+import org.ender.updater.tasks.TaskListener;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
