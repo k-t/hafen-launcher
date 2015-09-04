@@ -15,6 +15,9 @@ public class UpdateClientTask implements UpdaterTask {
     @Override
     public void run(UpdaterListener listener) {
         List<Item> update = new ArrayList<Item>();
+
+        listener.step("Checking for updates...");
+
         for(Item item : config.items){
             if(!item.hasValidPlatform())
                 continue;
@@ -25,7 +28,7 @@ public class UpdateClientTask implements UpdaterTask {
                 listener.log(String.format("No updates for '%s'", item.getFileName()));
             }
         }
-        for (Item item: update){
+        for (Item item: update) {
             item.download(listener);
             if (item.requiresExtraction())
                 item.extract(listener);

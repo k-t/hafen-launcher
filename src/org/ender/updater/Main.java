@@ -12,7 +12,6 @@ public class Main {
         gui.setVisible(true);
         gui.setSize(350, 450);
         gui.log(String.format("OS: '%s', arch: '%s'", System.getProperty("os.name"), System.getProperty("os.arch")));
-        gui.log("Checking for updates...");
 
         UpdaterConfig cfg = new UpdaterConfig();
         Updater updater = new Updater(gui);
