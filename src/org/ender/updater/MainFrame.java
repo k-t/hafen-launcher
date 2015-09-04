@@ -41,6 +41,7 @@ public class MainFrame extends JFrame implements UpdaterListener {
         progress.setAlignmentX(LEFT_ALIGNMENT);
         progress.setMinimum(0);
         progress.setMaximum(PROGRESS_MAX);
+        progress.setPreferredSize(new Dimension(20, 20));
         pack();
     }
 
