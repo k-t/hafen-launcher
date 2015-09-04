@@ -1,10 +1,10 @@
 package org.ender.updater;
 
-public interface IUpdaterListener {
+public interface UpdaterListener {
 
     void log(String format);
 
-    void fisnished();
+    void finished();
 
     void progress(long position, long size);
 

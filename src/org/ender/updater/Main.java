@@ -1,37 +1,33 @@
 package org.ender.updater;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import org.ender.updater.tasks.*;
 
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
+import java.io.*;
+import javax.swing.*;
 
 
-public class Main extends JFrame implements IUpdaterListener{
+public class Main extends JFrame implements UpdaterListener {
     private static final int PROGRESS_MAX = 1024;
     private static final String LOG_DIR = "logs";
     private static final long serialVersionUID = 1L;
     private static Updater updater;
     private FileOutputStream log;
-    public static File dir = new File(".");
 
     public static void main(String[] args) {
-	try {
-	    javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-	} catch(Exception e) {}
-	Main gui = new Main();
-	gui.setVisible(true);
-	gui.setSize(350, 450);
-	gui.log(String.format("OS: '%s', arch: '%s'", System.getProperty("os.name"), System.getProperty("os.arch")));
-	gui.log("Checking for updates...");
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch(Exception e) {}
+        Main gui = new Main();
+        gui.setVisible(true);
+        gui.setSize(350, 450);
+        gui.log(String.format("OS: '%s', arch: '%s'", System.getProperty("os.name"), System.getProperty("os.arch")));
+        gui.log("Checking for updates...");
 
-	updater = new Updater(gui);
-	updater.update();
+        UpdaterConfig cfg = new UpdaterConfig();
+        updater = new Updater(gui);
+        updater.addTask(new UpdateClientTask(cfg));
+        updater.addTask(new RunClientTask(cfg));
+        updater.run();
     }
 
     private JTextArea logbox;
@@ -64,42 +60,30 @@ public class Main extends JFrame implements IUpdaterListener{
 
     @Override
     public void log(String message) {
-	message = message.concat("\n");
-	logbox.append(message);
-	try {
-	    if(log != null){log.write(message.getBytes());}
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
+        message = message.concat("\n");
+        logbox.append(message);
+        try {
+            if(log != null){log.write(message.getBytes());}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void fisnished() {
-	log("Starting client...");
-	String libs = String.format("-Djava.library.path=\"%%PATH%%\"%s.", File.pathSeparator);
-	UpdaterConfig cfg = updater.cfg;
-	ProcessBuilder pb = new ProcessBuilder("java", "-Xmx"+cfg.mem, libs, "-jar", cfg.jar, "-U", cfg.res, cfg.server);
-	pb.directory(dir.getAbsoluteFile());
-	try {
-	    pb.start();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	try {
-	    if(log != null){
-		log.flush();
-		log.close();
-	    }
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	System.exit(0);
+    public void finished() {
+        try {
+            if(log != null){
+                log.flush();
+                log.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.exit(0);
     }
 
     @Override
     public void progress(long position, long size) {
-	progress.setValue((int) (PROGRESS_MAX * ((float) position / size)));
+        progress.setValue((int) (PROGRESS_MAX * ((float) position / size)));
     }
-
-
 }

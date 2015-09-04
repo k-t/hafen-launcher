@@ -3,7 +3,6 @@ package org.ender.updater;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +19,15 @@ public class UpdaterConfig {
     private static final String ITEM = "item";
     
     public String mem, res, server, jar;
+    public File dir;
 
-    private final ItemFactory itemFactory = new ItemFactory();
+    private final ItemFactory itemFactory = new ItemFactory(this);
     public final List<Item> items = new ArrayList<Item>();
 
     public UpdaterConfig() {
 	InputStream stream = UpdaterConfig.class.getResourceAsStream("/config.xml");
+
+    dir = new File(".");
 
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder builder;

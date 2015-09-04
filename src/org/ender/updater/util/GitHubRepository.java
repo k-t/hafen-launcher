@@ -1,4 +1,4 @@
-package org.ender.updater;
+package org.ender.updater.util;
 
 import java.io.File;
 import java.io.IOException;

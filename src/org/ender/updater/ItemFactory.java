@@ -1,5 +1,6 @@
 package org.ender.updater;
 
+import org.ender.updater.util.GitHubRepository;
 import org.w3c.dom.Element;
 
 import java.io.File;
@@ -16,6 +17,12 @@ public class ItemFactory {
     private static final String TYPE_LINK = "link";
     private static final String TYPE_GITHUB_RELEASE = "github-release";
 
+    private final UpdaterConfig config;
+
+    public ItemFactory(UpdaterConfig config) {
+        this.config = config;
+    }
+
     public Item create(Element el) throws IOException {
         String os = el.getAttribute(OS);
         String arch = el.getAttribute(ARCH);
@@ -24,14 +31,14 @@ public class ItemFactory {
         boolean useHeadRequest = !getType(el).equals(TYPE_GITHUB_RELEASE);
 
         String e = el.getAttribute(EXTRACT);
-        File extract = e.length() > 0 ? new File(Main.dir, e) : null;
+        File extract = e.length() > 0 ? new File(config.dir, e) : null;
 
         File file;
         if (el.hasAttribute(FILE)) {
-            file = new File(Main.dir, el.getAttribute(FILE));
+            file = new File(config.dir, el.getAttribute(FILE));
         } else {
             int i = url.lastIndexOf("/");
-            file = new File(Main.dir, url.substring(i + 1));
+            file = new File(config.dir, url.substring(i + 1));
         }
 
         return new Item(arch, os, file, extract, url, useHeadRequest);

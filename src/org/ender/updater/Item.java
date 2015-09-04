@@ -70,7 +70,7 @@ public class Item {
         return false;
     }
 
-    public void download(IUpdaterListener listener) {
+    public void download(UpdaterListener listener) {
         listener.log(String.format("Downloading '%s'", file.getName()));
         try {
             ReadableByteChannel rbc = Channels.newChannel(url.openStream());
@@ -91,7 +91,7 @@ public class Item {
         }
     }
 
-    public void extract(IUpdaterListener listener) {
+    public void extract(UpdaterListener listener) {
         listener.log(String.format("Unpacking '%s'", file.getName()));
         try {
             ZipFile zip;
