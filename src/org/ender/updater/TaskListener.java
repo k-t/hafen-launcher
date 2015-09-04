@@ -1,6 +1,6 @@
 package org.ender.updater;
 
-public interface UpdaterListener {
+public interface TaskListener {
 
     void log(String format);
 

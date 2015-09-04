@@ -5,7 +5,7 @@ import org.ender.updater.*;
 import java.io.File;
 import java.io.IOException;
 
-public class RunClientTask implements UpdaterTask {
+public class RunClientTask implements Task {
     private final UpdaterConfig config;
 
     public RunClientTask(UpdaterConfig config) {
@@ -13,7 +13,7 @@ public class RunClientTask implements UpdaterTask {
     }
 
     @Override
-    public void run(UpdaterListener listener) {
+    public void run(TaskListener listener) {
         listener.step("Starting client...");
         String libs = String.format("-Djava.library.path=\"%%PATH%%\"%s.", File.pathSeparator);
         ProcessBuilder pb = new ProcessBuilder("java", "-Xmx"+config.mem, libs, "-jar", config.jar, "-U", config.res, config.server);

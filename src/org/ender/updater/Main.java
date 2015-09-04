@@ -12,11 +12,5 @@ public class Main {
         gui.setVisible(true);
         gui.setSize(350, 450);
         gui.log(String.format("OS: '%s', arch: '%s'", System.getProperty("os.name"), System.getProperty("os.arch")));
-
-        UpdaterConfig cfg = new UpdaterConfig();
-        Updater updater = new Updater(gui);
-        updater.addTask(new UpdateClientTask(cfg));
-        updater.addTask(new RunClientTask(cfg));
-        updater.run();
     }
 }

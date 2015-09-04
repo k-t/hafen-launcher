@@ -5,7 +5,7 @@ import org.ender.updater.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateClientTask implements UpdaterTask {
+public class UpdateClientTask implements Task {
     private final UpdaterConfig config;
 
     public UpdateClientTask(UpdaterConfig config) {
@@ -13,7 +13,7 @@ public class UpdateClientTask implements UpdaterTask {
     }
 
     @Override
-    public void run(UpdaterListener listener) {
+    public void run(TaskListener listener) {
         List<Item> update = new ArrayList<Item>();
 
         listener.step("Checking for updates...");

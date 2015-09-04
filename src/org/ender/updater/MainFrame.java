@@ -3,12 +3,13 @@ package org.ender.updater;
 import org.ender.updater.tasks.*;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 
-
-public class MainFrame extends JFrame implements UpdaterListener {
+public class MainFrame extends JFrame implements TaskListener {
     private static final int PROGRESS_MAX = 1024;
     private static final String LOG_DIR = "logs";
     private static final long serialVersionUID = 1L;
@@ -17,6 +18,8 @@ public class MainFrame extends JFrame implements UpdaterListener {
     private JLabel progressLabel;
     private JProgressBar progress;
     private FileOutputStream log;
+    private UpdaterConfig config;
+    private TaskExecutor taskExecutor;
 
     public MainFrame() {
         super("Hafen Launcher");
@@ -43,6 +46,20 @@ public class MainFrame extends JFrame implements UpdaterListener {
         progress.setMaximum(PROGRESS_MAX);
         progress.setPreferredSize(new Dimension(20, 20));
         pack();
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                config = new UpdaterConfig();
+                taskExecutor = new TaskExecutor();
+                updateClient();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                taskExecutor.stop();
+            }
+        });
     }
 
     private void openLog() {
@@ -89,5 +106,18 @@ public class MainFrame extends JFrame implements UpdaterListener {
     @Override
     public void progress(long position, long size) {
         progress.setValue((int) (PROGRESS_MAX * ((float) position / size)));
+    }
+
+    private void updateClient() {
+        taskExecutor.queue(new UpdateClientTask(config), new TaskAdapter(MainFrame.this) {
+            @Override
+            public void finished() {
+                MainFrame.this.runClient();
+            }
+        });
+    }
+
+    private void runClient() {
+        taskExecutor.queue(new RunClientTask(config), MainFrame.this);
     }
 }
