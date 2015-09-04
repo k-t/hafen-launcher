@@ -36,7 +36,8 @@ public class MainFrame extends JFrame implements TaskListener {
         changelog = new JEditorPane();
         changelog.setContentType("text/html");
         changelog.setEditable(false);
-        changelog.setFont(changelog.getFont().deriveFont(10.0f));
+        changelog.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+        //changelog.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
         Container bottom = new JPanel();
         bottom.setLayout(new BorderLayout());
