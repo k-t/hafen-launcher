@@ -22,4 +22,8 @@
     </target>
 
     <target name="deftgt" depends="jar" />
+
+    <target name="clean">
+        <delete dir="build" />
+    </target>
 </project>
