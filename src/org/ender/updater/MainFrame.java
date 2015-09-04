@@ -28,12 +28,21 @@ public class MainFrame extends JFrame implements TaskListener {
 
         JPanel p;
         add(p = new JPanel());
-        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
 
-        p.add(logbox = new JTextArea());
+        logbox = new JTextArea();
         logbox.setAlignmentX(LEFT_ALIGNMENT);
         logbox.setEditable(false);
+        logbox.setWrapStyleWord(true);
+        logbox.setLineWrap(true);
         logbox.setFont(logbox.getFont().deriveFont(10.0f));
+
+        JScrollPane scroll;
+        p.add(scroll = new JScrollPane(logbox,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+        scroll.setPreferredSize(getSize());
+        scroll.setAlignmentX(LEFT_ALIGNMENT);
 
         p.add(progressLabel = new JLabel());
         progressLabel.setAlignmentX(LEFT_ALIGNMENT);
