@@ -1,7 +1,5 @@
 package org.ender.updater;
 
-import org.ender.updater.tasks.*;
-
 public class Main {
     public static void main(String[] args) {
         try {
@@ -9,8 +7,9 @@ public class Main {
         } catch(Exception e) {}
 
         MainFrame gui = new MainFrame();
-        gui.setVisible(true);
-        gui.setSize(350, 450);
+        gui.setSize(600, 400);
+        gui.setLocationRelativeTo(null); // place at the screen center
         gui.log(String.format("OS: '%s', arch: '%s'", System.getProperty("os.name"), System.getProperty("os.arch")));
+        gui.setVisible(true);
     }
 }
