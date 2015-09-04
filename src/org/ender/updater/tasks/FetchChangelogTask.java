@@ -19,7 +19,7 @@ public class FetchChangelogTask implements Task {
 
     @Override
     public void run(TaskListener listener) {
-        listener.step("Fetching changelog...");
+        listener.log("Fetching changelog...");
         StringBuilder sb = new StringBuilder();
         try {
             InputStreamReader in = new InputStreamReader(new URL(config.changelogUrl).openStream());

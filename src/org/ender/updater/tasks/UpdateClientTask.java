@@ -19,7 +19,7 @@ public class UpdateClientTask implements Task {
 
     @Override
     public void run(TaskListener listener) {
-        listener.step("Checking for updates...");
+        listener.log("Checking for updates...");
 
         List<Item> update = new ArrayList<Item>();
         updatedFileCount = 0;

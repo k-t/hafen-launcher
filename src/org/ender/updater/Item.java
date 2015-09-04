@@ -76,7 +76,7 @@ public class Item {
     }
 
     public void download(TaskListener listener) {
-        listener.step(String.format("Downloading %s...", file.getName()));
+        listener.log(String.format("Downloading %s...", file.getName()));
         try {
             ReadableByteChannel rbc = Channels.newChannel(src.getUrl().openStream());
             FileOutputStream fos = new FileOutputStream(file);
@@ -97,7 +97,7 @@ public class Item {
     }
 
     public void extract(TaskListener listener) {
-        listener.step(String.format("Unpacking %s...", file.getName()));
+        listener.log(String.format("Unpacking %s...", file.getName()));
         try {
             ZipFile zip;
             zip = new ZipFile(file);

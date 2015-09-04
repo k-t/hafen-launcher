@@ -14,7 +14,7 @@ public class RunClientTask implements Task {
 
     @Override
     public void run(TaskListener listener) {
-        listener.step("Starting client...");
+        listener.log("Starting client...");
         String libs = String.format("-Djava.library.path=\"%%PATH%%\"%s.", File.pathSeparator);
         ProcessBuilder pb = new ProcessBuilder("java", "-Xmx"+config.mem, libs, "-jar", config.jar, "-U", config.res, config.server);
         pb.directory(config.dir.getAbsoluteFile());

@@ -18,11 +18,6 @@ public class TaskAdapter implements TaskListener  {
     }
 
     @Override
-    public void step(String text) {
-        base.step(text);
-    }
-
-    @Override
     public void progress(long position, long size) {
         base.progress(position, size);
     }

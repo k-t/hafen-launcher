@@ -6,8 +6,6 @@ public interface TaskListener {
 
     void finished();
 
-    void step(String text);
-
     void progress(long position, long size);
 
 }

@@ -11,14 +11,15 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 public class MainFrame extends JFrame implements TaskListener {
     private static final int PROGRESS_MAX = 1024;
     private static final String LOG_DIR = "logs";
     private static final long serialVersionUID = 1L;
 
-    private JTextPane logbox;
-    private JLabel progressLabel;
+    private JEditorPane changelog;
     private JProgressBar progress;
     private JButton launch;
 
@@ -32,16 +33,13 @@ public class MainFrame extends JFrame implements TaskListener {
         openLog();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        logbox = new JTextPane();
-        logbox.setContentType("text/html");
-        logbox.setEditable(false);
-        logbox.setFont(logbox.getFont().deriveFont(10.0f));
+        changelog = new JEditorPane();
+        changelog.setContentType("text/html");
+        changelog.setEditable(false);
+        changelog.setFont(changelog.getFont().deriveFont(10.0f));
 
         Container bottom = new JPanel();
         bottom.setLayout(new BorderLayout());
-
-        bottom.add(progressLabel = new JLabel(), BorderLayout.PAGE_START);
-        progressLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
         bottom.add(progress = new JProgressBar(), BorderLayout.CENTER);
         progress.setMinimum(0);
@@ -60,7 +58,7 @@ public class MainFrame extends JFrame implements TaskListener {
 
         Container p = getContentPane();
         p.setLayout(new BorderLayout());
-        p.add(new JScrollPane(logbox), BorderLayout.CENTER);
+        p.add(new JScrollPane(changelog), BorderLayout.CENTER);
         p.add(bottom, BorderLayout.PAGE_END);
 
         pack();
@@ -70,7 +68,7 @@ public class MainFrame extends JFrame implements TaskListener {
             public void windowOpened(WindowEvent e) {
                 config = new UpdaterConfig();
                 taskExecutor = new TaskExecutor();
-                fetchChangelog();
+                updateClient();
             }
 
             @Override
@@ -94,6 +92,14 @@ public class MainFrame extends JFrame implements TaskListener {
     @Override
     public void log(String message) {
         message = message.concat("\n");
+
+        try {
+            Document doc = changelog.getDocument();
+            doc.insertString(doc.getLength(), message, null);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+
         try {
             if(log != null){log.write(message.getBytes());}
         } catch (IOException e) {
@@ -115,12 +121,6 @@ public class MainFrame extends JFrame implements TaskListener {
     }
 
     @Override
-    public void step(String text) {
-        progressLabel.setText(text);
-        log(text);
-    }
-
-    @Override
     public void progress(long position, long size) {
         progress.setValue((int) (PROGRESS_MAX * ((float) position / size)));
     }
@@ -130,8 +130,9 @@ public class MainFrame extends JFrame implements TaskListener {
         taskExecutor.queue(task, new TaskAdapter(MainFrame.this) {
             @Override
             public void finished() {
-                logbox.setText(toHtml(task.getChangelog()));
-                MainFrame.this.updateClient();
+                progress.setVisible(false);
+                launch.setVisible(true);
+                changelog.setText(toHtml(task.getChangelog()));
             }
         });
     }
@@ -142,9 +143,7 @@ public class MainFrame extends JFrame implements TaskListener {
             @Override
             public void finished() {
                 if (task.getUpdatedFileCount() > 0) {
-                    progressLabel.setVisible(false);
-                    progress.setVisible(false);
-                    launch.setVisible(true);
+                    fetchChangelog();
                 } else
                     MainFrame.this.runClient();
             }
