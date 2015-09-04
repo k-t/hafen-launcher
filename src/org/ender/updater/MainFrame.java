@@ -5,6 +5,8 @@ import org.ender.updater.util.ExceptionUtils;
 import org.markdown4j.Markdown4jProcessor;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
@@ -18,6 +20,7 @@ public class MainFrame extends JFrame implements TaskListener {
     private JTextPane logbox;
     private JLabel progressLabel;
     private JProgressBar progress;
+    private JButton launch;
 
     private FileOutputStream log;
     private UpdaterConfig config;
@@ -44,6 +47,16 @@ public class MainFrame extends JFrame implements TaskListener {
         progress.setMinimum(0);
         progress.setMaximum(PROGRESS_MAX);
         progress.setPreferredSize(new Dimension(20, 20));
+
+        bottom.add(launch = new JButton(), BorderLayout.PAGE_END);
+        launch.setText("Launch");
+        launch.setVisible(false);
+        launch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                runClient();
+            }
+        });
 
         Container p = getContentPane();
         p.setLayout(new BorderLayout());
@@ -124,10 +137,16 @@ public class MainFrame extends JFrame implements TaskListener {
     }
 
     private void updateClient() {
-        taskExecutor.queue(new UpdateClientTask(config), new TaskAdapter(MainFrame.this) {
+        final UpdateClientTask task = new UpdateClientTask(config);
+        taskExecutor.queue(task, new TaskAdapter(MainFrame.this) {
             @Override
             public void finished() {
-                MainFrame.this.runClient();
+                if (task.getUpdatedFileCount() > 0) {
+                    progressLabel.setVisible(false);
+                    progress.setVisible(false);
+                    launch.setVisible(true);
+                } else
+                    MainFrame.this.runClient();
             }
         });
     }

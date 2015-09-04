@@ -7,16 +7,22 @@ import java.util.List;
 
 public class UpdateClientTask implements Task {
     private final UpdaterConfig config;
+    private int updatedFileCount;
 
     public UpdateClientTask(UpdaterConfig config) {
         this.config = config;
     }
 
+    public int getUpdatedFileCount() {
+        return updatedFileCount;
+    }
+
     @Override
     public void run(TaskListener listener) {
-        List<Item> update = new ArrayList<Item>();
-
         listener.step("Checking for updates...");
+
+        List<Item> update = new ArrayList<Item>();
+        updatedFileCount = 0;
 
         for(Item item : config.items){
             if(!item.hasValidPlatform())
@@ -32,6 +38,7 @@ public class UpdateClientTask implements Task {
             item.download(listener);
             if (item.requiresExtraction())
                 item.extract(listener);
+            updatedFileCount++;
         }
     }
 }
