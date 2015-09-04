@@ -1,6 +1,6 @@
 package org.ender.updater;
 
-import org.ender.updater.util.GitHubRepository;
+import org.ender.updater.sources.*;
 import org.w3c.dom.Element;
 
 import java.io.File;
@@ -26,9 +26,7 @@ public class ItemFactory {
     public Item create(Element el) throws IOException {
         String os = el.getAttribute(OS);
         String arch = el.getAttribute(ARCH);
-        String url = getUrl(el);
-        // HEAD requests don't work quite well with GitHub releases
-        boolean useHeadRequest = !getType(el).equals(TYPE_GITHUB_RELEASE);
+        ItemSource src = getSource(el);
 
         String e = el.getAttribute(EXTRACT);
         File extract = e.length() > 0 ? new File(config.dir, e) : null;
@@ -37,24 +35,25 @@ public class ItemFactory {
         if (el.hasAttribute(FILE)) {
             file = new File(config.dir, el.getAttribute(FILE));
         } else {
+            String url = src.getUrl().toString();
             int i = url.lastIndexOf("/");
             file = new File(config.dir, url.substring(i + 1));
         }
 
-        return new Item(arch, os, file, extract, url, useHeadRequest);
+        return new Item(arch, os, file, extract, src);
     }
 
-    private String getUrl(Element el) throws IOException {
+    private ItemSource getSource(Element el) throws IOException {
         String type = getType(el);
         if (type.equals(TYPE_GITHUB_RELEASE)) {
             String owner = el.getAttribute("owner");
             String repoName = el.getAttribute("repo");
             String fileName = el.getAttribute("file");
-            GitHubRepository repo = new GitHubRepository(owner, repoName);
-            String releaseName = repo.getLatestReleaseName();
-            return repo.getAssetDownloadUrl(releaseName, fileName).toString();
+            return new GitHubReleaseSource(owner, repoName, fileName);
+        } else {
+            String url = el.getAttribute(LINK);
+            return new UrlSource(url);
         }
-        return el.getAttribute(LINK);
     }
 
     private String getType(Element el) {

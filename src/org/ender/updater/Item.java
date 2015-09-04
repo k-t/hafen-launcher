@@ -16,18 +16,16 @@ public class Item {
     private final String arch;
     private final String os;
     private final File file;
-    private final URL url;
+    private final ItemSource src;
     private final File extract;
-    private final boolean useHeadRequest;
     private long size = 0;
 
-    public Item(String arch, String os, File file, File extract, String url, boolean useHeadRequest) throws MalformedURLException {
+    public Item(String arch, String os, File file, File extract, ItemSource src) {
         this.arch = arch;
         this.os = os;
         this.file = file;
         this.extract = extract;
-        this.url = new URL(url);
-        this.useHeadRequest = useHeadRequest;
+        this.src = src;
     }
 
     public long getLastModified() {
@@ -50,7 +48,12 @@ public class Item {
 
     public boolean hasUpdate() {
         try {
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            boolean useHeadRequest = src.supportsHeadRequests();
+            URL url = src.getUrl();
+            if (url == null)
+                // TODO: throw exception?
+                return false;
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             if (useHeadRequest) {
                 conn.setRequestMethod("HEAD");
                 conn.setIfModifiedSince(getLastModified());
@@ -73,7 +76,7 @@ public class Item {
     public void download(TaskListener listener) {
         listener.step(String.format("Downloading %s...", file.getName()));
         try {
-            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+            ReadableByteChannel rbc = Channels.newChannel(src.getUrl().openStream());
             FileOutputStream fos = new FileOutputStream(file);
             long position = 0;
             int step = 20480;
