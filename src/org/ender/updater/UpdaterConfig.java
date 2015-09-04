@@ -18,7 +18,7 @@ import org.w3c.dom.NodeList;
 public class UpdaterConfig {
     private static final String ITEM = "item";
     
-    public String mem, res, server, jar;
+    public String mem, res, server, jar, changelogUrl;
     public File dir;
 
     private final ItemFactory itemFactory = new ItemFactory(this);
@@ -48,6 +48,8 @@ public class UpdaterConfig {
 	    
 	    node = attrs.getNamedItem("jar");
 	    jar = (node != null)?node.getNodeValue():"";
+
+        changelogUrl = doc.getDocumentElement().getAttribute("changelog");
 
 	    NodeList groupNodes = doc.getElementsByTagName(ITEM);
 	    for (int i = 0; i < groupNodes.getLength(); i++) {

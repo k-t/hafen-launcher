@@ -5,7 +5,6 @@ import org.ender.updater.tasks.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.*;
 import javax.swing.*;
 
@@ -52,7 +51,7 @@ public class MainFrame extends JFrame implements TaskListener {
             public void windowOpened(WindowEvent e) {
                 config = new UpdaterConfig();
                 taskExecutor = new TaskExecutor();
-                updateClient();
+                fetchChangelog();
             }
 
             @Override
@@ -76,7 +75,6 @@ public class MainFrame extends JFrame implements TaskListener {
     @Override
     public void log(String message) {
         message = message.concat("\n");
-        logbox.append(message);
         try {
             if(log != null){log.write(message.getBytes());}
         } catch (IOException e) {
@@ -106,6 +104,17 @@ public class MainFrame extends JFrame implements TaskListener {
     @Override
     public void progress(long position, long size) {
         progress.setValue((int) (PROGRESS_MAX * ((float) position / size)));
+    }
+
+    private void fetchChangelog() {
+        final FetchChangelogTask task = new FetchChangelogTask(config);
+        taskExecutor.queue(task, new TaskAdapter(MainFrame.this) {
+            @Override
+            public void finished() {
+                logbox.setText(task.getChangelog());
+                MainFrame.this.updateClient();
+            }
+        });
     }
 
     private void updateClient() {
